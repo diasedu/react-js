@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react'
 import { getUsers } from './services/api'
 import UserCard from './components/UserCard'
+import ButtonUsage from './components/ButtonUsage'
+import TableUsage from './components/TableUsage'
 
 function App() {
 
@@ -13,6 +15,11 @@ function App() {
   const loadUsers = async () => {
 
     const response = await getUsers()
+    
+    if (response.error) {
+      alert(response.error)
+      return
+    }
 
     setUsers(response.data)
   }
@@ -21,17 +28,22 @@ function App() {
     <div>
 
       <h1>Usuários</h1>
+      <ButtonUsage onClick={loadUsers}/>
 
-      {users.map((user) => (
+      <div>
+        {
+          users.map((user) => (
+            <TableUsage
+              key={user.id}
+              data={[user]}
+            />
 
-        <UserCard
-          key={user.id}
-          nome={user.nome}
-          email={user.email}
-          status={user.status}
-        />
+          ))
+        }
+      </div>
+      
 
-      ))}
+      
 
     </div>
   )
